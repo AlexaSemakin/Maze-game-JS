@@ -1,36 +1,41 @@
+let sizeBlock = [20, 20];
+
 document.onkeydown = checkKey;
 
 function setCharaterPoint(x, y) {
-    let step = 10;
-    document.getElementById("character").style = "left: " + (x * (step + 6)).toString() + "px; top: " + (y * (step + 6)).toString() + "px;";
+    document.getElementById("character").style = "left: " + (x * (sizeBlock[0] + 6) + 5).toString() + "px; top: " + (y * (sizeBlock[1] + 6) + 5).toString() + "px;";
+    if (x == finish[1] && y == finish[1]) {
+        alert('ФИНИШ');
+        generate();
+    }
 }
 
 function to_top() {
     if (map[point_now[1]][point_now[0]][0] == 0) {
         point_now[1]--;
     }
-    to_go_point()
+    to_go_point();
 }
 
 function to_bottom() {
     if (map[point_now[1]][point_now[0]][2] == 0) {
         point_now[1]++;
     }
-    to_go_point()
+    to_go_point();
 }
 
 function to_left() {
     if (map[point_now[1]][point_now[0]][3] == 0) {
         point_now[0]--;
     }
-    to_go_point()
+    to_go_point();
 }
 
 function to_right() {
     if (map[point_now[1]][point_now[0]][1] == 0) {
         point_now[0]++;
     }
-    to_go_point()
+    to_go_point();
 }
 
 function to_go_point() {
@@ -94,22 +99,20 @@ let point_now = [0, 0];
 let elements = [];
 let go_to_vector = [];
 let map = [];
+let value = [];
 let go_to = [
     [-1, 0],
     [0, 1],
     [1, 0],
     [0, -1],
 ];
+let hfinifh = 0;
+let finish = [];
 let visyble_arrow = true;
 
 function generate() {
     let val = parseInt(document.getElementById('size_lab_textbox').value);
-    if (val <= 100 && val >= 10) {
-        document.getElementById("display").innerHTML = "";
-    } else {
-        document.getElementById('size_lab_textbox').value = map.length;
-        val = map.length;
-    }
+    document.getElementById("display").innerHTML = "";
     map = [];
     start(val);
 }
@@ -117,6 +120,7 @@ function generate() {
 function restart_generate() {
     n = map.length;
     map = [];
+    value = [];
     start(n);
 }
 
@@ -124,6 +128,8 @@ function generete_interface() {
     setCharaterPoint(0, 0);
     point_now = [0, 0];
     document.getElementById("display").innerHTML = "";
+    let i = 0,
+        j = 0;
     map.forEach(array => {
         array.forEach(item => {
             let block_image = document.createElement("div");
@@ -131,7 +137,7 @@ function generete_interface() {
             document.getElementById("display").append(block_image);
             let style = "";
             let color_border = "black";
-            let color_not_border = "royalblue";
+            let color_not_border = "transparent";
             if (item[0] == 1) {
                 style += "border-top: 3px solid " + color_border + "; ";
             } else {
@@ -152,20 +158,16 @@ function generete_interface() {
             } else {
                 style += "border-left: 3px solid " + color_not_border + "; ";
             }
+            if (i == finish[0] && j == finish[1]) {
+                style += "background-color: green; "
+                console.log([i, j]);
+            }
             block_image.style = style;
-            //block_image.style = "border-top: " + item[0] * 3 + "px solid black; border-right:" + item[1] * 3 + "px solid black; border-bottom:" + item[2] * 3 + "px solid black; border-left: " + item[3] * 3 + "px solid black"
-
-            // for (let i = 0; i <= item.length; i++) {
-            //     if (item[i] == 1) {
-            //         let image = document.createElement("div");
-            //         image.className = "imageBlock";
-            //         image.id = 'image_' + (i + 1).toString();
-            //         block_image.appendChild(image);
-            //     }
-            // }
-
+            j++;
         });
         document.getElementById("display").innerHTML += "<br>";
+        i++;
+        j = 0;
     });
 }
 
@@ -188,33 +190,88 @@ function getNum(a, b) {
     return a;
 }
 
-function dfs(nowX, nowY, n, wasX = -1, wasY = -1) {
-    generate_go_to_vector(go_to.length);
-    map[nowX][nowY] = [0, 0, 0, 0];
-    go_to_vector.forEach(item => {
-        let toX = nowX + go_to[item][0];
-        let toY = nowY + go_to[item][1];
-        if (toX != wasX || toY != wasY) {
-            if ((toX < 0) || (toX >= n) || (toY < 0) || (toY >= n) || map[toX][toY].length > 0) {
-                map[nowX][nowY][item] = 1;
-            } else {
-                dfs(toX, toY, n, nowX, nowY);
+
+function dfs(startPoint, n) {
+    var stack = [];
+    stack.push([
+        startPoint, [-1, -1], 0
+    ]);
+    value[startPoint[0]][startPoint[1]] = 0;
+    while (stack.length > 0) {
+        let stackElement = stack.pop();
+        let nowX = stackElement[0][0];
+        let nowY = stackElement[0][1];
+        let wasX = stackElement[1][0];
+        let wasY = stackElement[1][1];
+        if (map[nowX][nowY].length == 0) {
+            map[nowX][nowY] = [0, 0, 0, 0];
+            value[nowX][nowY] = stackElement[2];
+            if (value[nowX][nowY] > hfinifh) {
+                hfinifh = value[nowX][nowY];
+                finish = [nowX, nowY]
             }
+            generate_go_to_vector(go_to.length);
+            go_to_vector.forEach(item => {
+                let toX = nowX + go_to[item][0];
+                let toY = nowY + go_to[item][1];
+                if (toX != wasX || toY != wasY) {
+                    if ((toX < 0) || (toX >= n) || (toY < 0) || (toY >= n) || map[toX][toY].length > 0) {
+                        map[nowX][nowY][item] = 1;
+                    } else {
+                        stack.push([
+                            [toX, toY],
+                            [nowX, nowY],
+                            stackElement[2] + 1
+                        ]);
+                    }
+                }
+            });
         }
-    });
+    }
 }
 
+function makeWals() {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[i].length; j++) {
+            for (let k = 0; k < go_to.length; k++) {
+                let toX = i + go_to[k][0];
+                let toY = j + go_to[k][1];
+                if (map[i][j][k] == 0 && (toX >= 0) && (toX < map.length) && (toY >= 0) && (toY < map.length) && map[toX][toY][getMirorItem(k)] == 1) {
+                    map[i][j][k] = 1;
+                }
+            }
+        }
+    }
+}
+
+function getMirorItem(index) {
+    if (index == 0) {
+        return 2;
+    }
+    if (index == 2) {
+        return 0;
+    }
+    if (index == 1) {
+        return 3;
+    }
+    if (index == 3) {
+        return 1;
+    }
+}
 
 function start(n, m) {
     for (let i = 0; i < n; i++) {
+        value.push([]);
         map.push([]);
         for (let j = 0; j < n; j++) {
             map[i].push([]);
+            value[i].push([]);
         }
     }
-    dfs(parseInt(n / 2), parseInt(n / 2), n);
+    dfs([0, 0], n);
+    makeWals();
     console.log('generated success');
     generete_interface();
     console.log('image generated success');
-
+    console.log(value);
 }
