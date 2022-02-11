@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title>Document</title>
+</head>
+
+<body onload="start(20)" class="disable-dbl-tap-zoom">
+    <div id="laberint">
+        <div id="contol_buttons" class="not_select">
+            <div id="button_top" class="visible_text not_select" onclick="to_top()">
+                <div id="button_top_text">
+                    △
+                </div>
+            </div>
+            <div id="button_left" class="visible_text not_select" onclick="to_left()">
+                <div id="button_left_text">
+                    ◁
+                </div>
+            </div>
+            <div id="button_bottom" class="visible_text not_select" onclick="to_bottom()">
+                <div id="button_bottom_text">
+                    ▽
+                </div>
+            </div>
+            <div id="button_right" class="visible_text not_select" onclick="to_right()">
+                <div id="button_right_text">
+                    ▷
+                </div>
+            </div>
+        </div>
+        <div id="character">
+
+        </div>
+        <div id="display">
+
+        </div>
+    </div>
+
+    <div id="div_settings">
+        <input type="button" id='button_news' value="Новый лаберинт" onclick="restart_generate()">
+        <br>
+        <input type="number" id='size_lab_textbox' value="20" min="10" max="100" step="5">
+        <input type="button" id='button' value="Изменить размерность" onclick="generate()">
+        <br>
+        <p class="not_select checkbox_button_visuble"><label class="not_select"><input type="checkbox" id="checkbox-visible-text" onclick="change_visible_text()" checked> 
+            <span class="not_select">видимость стрелок управления</span></label></p>
+    </div>
+
+
+
+</body>
+
+
+</html>
