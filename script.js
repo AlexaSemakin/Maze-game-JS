@@ -1,4 +1,4 @@
-let sizeBlock = [20, 20];
+let sizeBlock = [10, 10];
 
 document.onkeydown = checkKey;
 
@@ -124,7 +124,7 @@ function restart_generate() {
     start(n);
 }
 
-function generete_interface() {
+async function generete_interface() {
     setCharaterPoint(0, 0);
     point_now = [0, 0];
     document.getElementById("display").innerHTML = "";
