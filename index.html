@@ -7,10 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <title>Document</title>
+    <title>laberint.online</title>
 </head>
 
 <body onload="start(25)" class="disable-dbl-tap-zoom">
+    <div id="DivCoinsText">
+        <p id="CoinsText">
+
+        </p>
+        <br>
+        <div id="legend">
+            <div id="_characterDiv">
+                <div id="_character">
+
+                </div>
+                - персонаж
+            </div>
+            <div id="_finishDiv">
+                <div id="_finish">
+
+                </div>
+                - финиш
+            </div>
+            <div id="_coinDiv">
+                <div id="_coin">
+
+                </div>
+                - монета
+            </div>
+        </div>
+    </div>
     <div id="laberint">
         <div id="contol_buttons" class="not_select">
             <div id="button_top" class="visible_text not_select" onclick="to_top()">
@@ -45,7 +71,7 @@
     <div id="div_settings">
         <input type="button" id='button_news' value="Новый лаберинт" onclick="restart_generate()">
         <br>
-        <input type="number" id='size_lab_textbox' value="25" min="10" max="100" step="5">
+        <input type="number" id='size_lab_textbox' value="25" min="5" max="100" step="5">
         <input type="button" id='button' value="Изменить размерность" onclick="generate()">
         <br>
         <p class="not_select checkbox_button_visuble"><label class="not_select"><input type="checkbox" id="checkbox-visible-text" onclick="change_visible_text()" checked> 

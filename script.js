@@ -1,12 +1,28 @@
-let sizeBlock = [10, 10];
-
 document.onkeydown = checkKey;
+
+let point_now = [0, 0],
+    elements = [],
+    go_to_vector = [],
+    map = [],
+    value = [],
+    go_to = [
+        [-1, 0],
+        [0, 1],
+        [1, 0],
+        [0, -1],
+    ],
+    hfinish = 0,
+    finish = [],
+    visyble_arrow = true,
+    coins = 0,
+    score = new Map();
+sizeBlock = [10, 10];
 
 function setCharaterPoint(x, y) {
     document.getElementById("character").style = "left: " + (x * (sizeBlock[0] + 6) + 5).toString() + "px; top: " + (y * (sizeBlock[1] + 6) + 5).toString() + "px;";
-    if (x == finish[1] && y == finish[1]) {
-        alert('ФИНИШ');
-        generate();
+    if (x == finish[1] && y == finish[0]) {
+        console.log(x, y);
+        next_lab();
     }
 }
 
@@ -14,31 +30,27 @@ function to_top() {
     if (map[point_now[1]][point_now[0]][0] == 0) {
         point_now[1]--;
     }
-    to_go_point();
+    setCharaterPoint(point_now[0], point_now[1]);
 }
 
 function to_bottom() {
     if (map[point_now[1]][point_now[0]][2] == 0) {
         point_now[1]++;
     }
-    to_go_point();
+    setCharaterPoint(point_now[0], point_now[1]);
 }
 
 function to_left() {
     if (map[point_now[1]][point_now[0]][3] == 0) {
         point_now[0]--;
     }
-    to_go_point();
+    setCharaterPoint(point_now[0], point_now[1]);
 }
 
 function to_right() {
     if (map[point_now[1]][point_now[0]][1] == 0) {
         point_now[0]++;
     }
-    to_go_point();
-}
-
-function to_go_point() {
     setCharaterPoint(point_now[0], point_now[1]);
 }
 
@@ -87,33 +99,20 @@ function checkKey(e) {
     } else if (e.keyCode == '39') {
         to_right();
     }
-    to_go_point()
 }
-
 
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
-let point_now = [0, 0];
-let elements = [];
-let go_to_vector = [];
-let map = [];
-let value = [];
-let go_to = [
-    [-1, 0],
-    [0, 1],
-    [1, 0],
-    [0, -1],
-];
-let hfinifh = 0;
-let finish = [];
-let visyble_arrow = true;
 
 function generate() {
     let val = parseInt(document.getElementById('size_lab_textbox').value);
     document.getElementById("display").innerHTML = "";
     map = [];
+    value = [];
+    hfinish = 0;
+    finish = [];
     start(val);
 }
 
@@ -121,7 +120,9 @@ function restart_generate() {
     n = map.length;
     map = [];
     value = [];
-    start(n);
+    hfinish = 0;
+    finish = [];
+    start(n, n);
 }
 
 async function generete_interface() {
@@ -160,7 +161,6 @@ async function generete_interface() {
             }
             if (i == finish[0] && j == finish[1]) {
                 style += "background-color: green; "
-                console.log([i, j]);
             }
             block_image.style = style;
             j++;
@@ -169,6 +169,37 @@ async function generete_interface() {
         i++;
         j = 0;
     });
+}
+
+
+function getNum(a, b) {
+    a |= 1 << b;
+    return a;
+}
+
+function SetCoinsValue() {
+    document.getElementById("CoinsText").innerHTML = "<div style='display: inline-block; margin-right: 20px;'>Coins: " + coins.toString() + "</div>  <div style='display: inline-block; margin-left: 20px;'>" + "Score(" + (map.length).toString() + "): " + score.get(map.length).toString() + "</div>";
+}
+
+
+
+
+function start(n, m) {
+    for (let i = 0; i < n; i++) {
+        value.push([]);
+        map.push([]);
+        for (let j = 0; j < n; j++) {
+            map[i].push([]);
+            value[i].push([]);
+        }
+    }
+    dfs([0, 0], n);
+    makeWals();
+    generete_interface();
+    if (score.get(map.length) == undefined) {
+        score.set(map.length, 0);
+    }
+    SetCoinsValue();
 }
 
 function generate_go_to_vector(count) {
@@ -185,18 +216,11 @@ function generate_go_to_vector(count) {
     }
 }
 
-function getNum(a, b) {
-    a |= 1 << b;
-    return a;
-}
-
-
 function dfs(startPoint, n) {
     var stack = [];
     stack.push([
         startPoint, [-1, -1], 0
     ]);
-    value[startPoint[0]][startPoint[1]] = 0;
     while (stack.length > 0) {
         let stackElement = stack.pop();
         let nowX = stackElement[0][0];
@@ -206,8 +230,8 @@ function dfs(startPoint, n) {
         if (map[nowX][nowY].length == 0) {
             map[nowX][nowY] = [0, 0, 0, 0];
             value[nowX][nowY] = stackElement[2];
-            if (value[nowX][nowY] > hfinifh) {
-                hfinifh = value[nowX][nowY];
+            if (stackElement[2] > hfinish) {
+                hfinish = stackElement[2];
                 finish = [nowX, nowY]
             }
             generate_go_to_vector(go_to.length);
@@ -244,6 +268,16 @@ function makeWals() {
     }
 }
 
+function next_lab() {
+    if (score.get(map.length) == undefined) {
+        score.set(map.length, 1);
+    } else {
+        score.set(map.length, score.get(map.length) + 1);
+    }
+    SetCoinsValue();
+    generate();
+}
+
 function getMirorItem(index) {
     if (index == 0) {
         return 2;
@@ -257,21 +291,4 @@ function getMirorItem(index) {
     if (index == 3) {
         return 1;
     }
-}
-
-function start(n, m) {
-    for (let i = 0; i < n; i++) {
-        value.push([]);
-        map.push([]);
-        for (let j = 0; j < n; j++) {
-            map[i].push([]);
-            value[i].push([]);
-        }
-    }
-    dfs([0, 0], n);
-    makeWals();
-    console.log('generated success');
-    generete_interface();
-    console.log('image generated success');
-    console.log(value);
 }

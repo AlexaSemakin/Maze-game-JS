@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap&subset=cyrillic');
 body,
 html {
     padding: 0;
@@ -10,7 +11,10 @@ html {
 }
 
 #character,
+#_character,
 #image_block,
+#_coin,
+#_finish,
 .imageBlock {
     height: 10px;
     width: 10px;
@@ -20,7 +24,7 @@ html {
 #contol_buttons {
     display: grid;
     position: absolute;
-    grid-template-areas: "up up up" "left bottom right";
+    grid-template-areas: "left up right" "left bottom right";
     grid-template-rows: auto auto;
     grid-template-columns: auto auto auto;
     grid-gap: 0px;
@@ -99,7 +103,7 @@ html {
     position: relative;
     font-size: 0px;
     display: table;
-    margin-top: 50px;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     background-color: white;
@@ -108,7 +112,6 @@ html {
 }
 
 #character {
-    background-color: rgba(253, 194, 1, 1);
     position: absolute;
     margin: 3px;
 }
@@ -136,4 +139,63 @@ html {
 
 .checkbox_button_visuble {
     margin: 5px;
+}
+
+#CoinsText {
+    text-align: center;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    font-feature-settings: 'liga' off;
+    color: #32353C;
+}
+
+#character,
+#_character {
+    background: crimson;
+    animation: background 2s infinite alternate;
+}
+
+@keyframes background {
+    50% {
+        background: darkviolet;
+    }
+}
+
+#_character,
+#_coin,
+#_finish {
+    display: inline-block;
+}
+
+#_coin {
+    background-color: rgba(253, 194, 1, 1);
+}
+
+#_finish {
+    background-color: green;
+}
+
+#legend {
+    text-align: center;
+}
+
+#_coinDiv,
+#_finishDiv,
+#_characterDiv {
+    margin: 0 10px;
+    display: inline-block;
+}
+
+#DivCoinsText {
+    background-color: white;
+    width: 400px;
+    margin: 0 auto;
+    border-radius: 0px 0px 5px 5px;
+    padding: 10px;
+}
+
+p {
+    margin: 0px;
 }
