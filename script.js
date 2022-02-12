@@ -1,4 +1,5 @@
 document.onkeydown = checkKey;
+window.onresize = checkSize;
 
 let point_now = [0, 0],
     elements = [],
@@ -15,14 +16,26 @@ let point_now = [0, 0],
     finish = [],
     visyble_arrow = true,
     coins = 0,
-    score = new Map();
-sizeBlock = [10, 10];
+    score = new Map(),
+    widthLab = 320,
+    minBlocks = 20,
+    sizeBlock = 10;
 
 function setCharaterPoint(x, y) {
-    document.getElementById("character").style = "left: " + (x * (sizeBlock[0] + 6) + 5).toString() + "px; top: " + (y * (sizeBlock[1] + 6) + 5).toString() + "px;";
+    document.getElementById("character").style = "left: " + (x * (sizeBlock + 6) + 5).toString() + "px; top: " + (y * (sizeBlock + 6) + 5).toString() + "px; " + "height: " + sizeBlock + "px; width: " + sizeBlock + "px;";
     if (x == finish[1] && y == finish[0]) {
         console.log(x, y);
         next_lab();
+    }
+    if (y * (sizeBlock + 6) + 5 > 160) {
+        document.getElementById('laberint').scrollTop = y * (sizeBlock + 6) + 5 - 160;
+    } else {
+        document.getElementById('laberint').scrollTop = 0;
+    }
+    if (x * (sizeBlock + 6) + 5 > 160) {
+        document.getElementById('laberint').scrollLeft = x * (sizeBlock + 6) + 5 - 160;
+    } else {
+        document.getElementById('laberint').scrollLeft = 0;
     }
 }
 
@@ -77,6 +90,11 @@ function change_visible_text() {
     }
 }
 
+function checkSize(e) {
+    widthLab = 320;
+    minBlocks = 20;
+}
+
 function checkKey(e) {
     e = e || window.event;
     switch (e.keyCode) {
@@ -106,71 +124,79 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-function generate() {
-    let val = parseInt(document.getElementById('size_lab_textbox').value);
+function generate(type = -1) {
+    let val = map.length;
+    if (map.length == 0) {
+        val = 20;
+    }
+    if (type == 1) {
+        val = parseInt(document.getElementById('size_lab_textbox').value);
+    }
     document.getElementById("display").innerHTML = "";
-    map = [];
-    value = [];
-    hfinish = 0;
-    finish = [];
+    clear_var();
+    if (val < minBlocks) {
+        sizeBlock = widthLab / val - 6;
+    } else {
+        sizeBlock = 10;
+    }
+    document.getElementById('laberint').style = "height: " + widthLab + "px; width: " + widthLab + "px;";
     start(val);
 }
 
-function restart_generate() {
-    n = map.length;
+function clear_var() {
     map = [];
     value = [];
     hfinish = 0;
     finish = [];
-    start(n, n);
 }
 
 async function generete_interface() {
     setCharaterPoint(0, 0);
     point_now = [0, 0];
     document.getElementById("display").innerHTML = "";
-    let i = 0,
-        j = 0;
-    map.forEach(array => {
-        array.forEach(item => {
+    for (let i = 0; i < map.length; i++) {
+        const array = map[i];
+        for (let j = 0; j < array.length; j++) {
+            const item = array[j];
             let block_image = document.createElement("div");
             block_image.className = "imageBlock";
             document.getElementById("display").append(block_image);
             let style = "";
             let color_border = "black";
             let color_not_border = "transparent";
-            if (item[0] == 1) {
-                style += "border-top: 3px solid " + color_border + "; ";
-            } else {
-                style += "border-top: 3px solid " + color_not_border + "; ";
-            }
-            if (item[1] == 1) {
-                style += "border-right: 3px solid " + color_border + "; ";
-            } else {
-                style += "border-right: 3px solid " + color_not_border + "; ";
-            }
-            if (item[2] == 1) {
-                style += "border-bottom: 3px solid " + color_border + "; ";
-            } else {
-                style += "border-bottom: 3px solid " + color_not_border + "; ";
-            }
-            if (item[3] == 1) {
-                style += "border-left: 3px solid " + color_border + "; ";
-            } else {
-                style += "border-left: 3px solid " + color_not_border + "; ";
-            }
+            style += "position: absolute; ";
+            style += "display: inline-block; ";
+            style += "top: " + (i * (sizeBlock + 6)).toString() + "px; ";
+            style += "left: " + (j * (sizeBlock + 6)).toString() + "px; ";
+            style += "height: " + (sizeBlock).toString() + "px; ";
+            style += "width: " + ((sizeBlock)).toString() + "px; ";
             if (i == finish[0] && j == finish[1]) {
-                style += "background-color: green; "
+                style += "background-color: green; ";
+            } else {
+                style += "background-color: transporate; ";
             }
-            block_image.style = style;
-            j++;
-        });
-        document.getElementById("display").innerHTML += "<br>";
-        i++;
-        j = 0;
-    });
-}
+            style += "border-width: 3px; border-style: solid; border-color: ";
+            for (let i = 0; i < 4; i++) {
+                style += (item[i] == 1) ? " " + color_border : " " + color_not_border;
+            }
+            block_image.style = style + "; ";
+        }
+    }
 
+    let block_image = document.createElement("div");
+    block_image.className = "imageBlock";
+    document.getElementById("display").append(block_image);
+    let style = "";
+    style += "position: absolute; ";
+    style += "display: inline-block; ";
+    style += "top: " + (map.length * (sizeBlock + 6)).toString() + "px; ";
+    style += "left: " + (map.length * (sizeBlock + 6)).toString() + "px; ";
+    style += "height: " + (5).toString() + "px; ";
+    style += "width: " + (5).toString() + "px; ";
+    style += "background-color: transporate; ";
+    block_image.style = style;
+
+}
 
 function getNum(a, b) {
     a |= 1 << b;
@@ -181,10 +207,7 @@ function SetCoinsValue() {
     document.getElementById("CoinsText").innerHTML = "<div style='display: inline-block; margin-right: 20px;'>Coins: " + coins.toString() + "</div>  <div style='display: inline-block; margin-left: 20px;'>" + "Score(" + (map.length).toString() + "): " + score.get(map.length).toString() + "</div>";
 }
 
-
-
-
-function start(n, m) {
+function start(n) {
     for (let i = 0; i < n; i++) {
         value.push([]);
         map.push([]);
@@ -254,6 +277,7 @@ function dfs(startPoint, n) {
     }
 }
 
+//поставить парные
 function makeWals() {
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[i].length; j++) {
@@ -268,6 +292,8 @@ function makeWals() {
     }
 }
 
+
+//сгенерировать новый лаберинт
 function next_lab() {
     if (score.get(map.length) == undefined) {
         score.set(map.length, 1);
@@ -278,6 +304,7 @@ function next_lab() {
     generate();
 }
 
+// получить зеркальное направление стены
 function getMirorItem(index) {
     if (index == 0) {
         return 2;
@@ -291,4 +318,8 @@ function getMirorItem(index) {
     if (index == 3) {
         return 1;
     }
+}
+
+function loadForm() {
+
 }

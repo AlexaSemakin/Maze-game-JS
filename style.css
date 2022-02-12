@@ -10,7 +10,6 @@ html {
     background: linear-gradient(170.98deg, #80D0C7 5.33%, #0093E9 93.16%);
 }
 
-#character,
 #_character,
 #image_block,
 #_coin,
@@ -28,10 +27,16 @@ html {
     grid-template-rows: auto auto;
     grid-template-columns: auto auto auto;
     grid-gap: 0px;
-    width: 100%;
-    height: 100%;
-    margin: -5px;
+    width: 330px;
+    height: 330px;
     padding: 0px;
+    margin: 0 auto;
+}
+
+#gamediv {
+    width: 330px;
+    height: 330px;
+    margin: 0 auto;
 }
 
 #button_top,
@@ -43,6 +48,7 @@ html {
     cursor: pointer;
     height: 100%;
     width: 100%;
+    z-index: 1;
 }
 
 .not_select {
@@ -100,12 +106,11 @@ html {
 }
 
 #laberint {
+    overflow: hidden;
     position: relative;
     font-size: 0px;
     display: table;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 10px auto;
     background-color: white;
     padding: 5px;
     border-radius: 5px;
@@ -121,9 +126,8 @@ html {
 }
 
 .imageBlock {
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-size: cover;
+    position: absolute;
+    z-index: 0;
 }
 
 #div_settings {
@@ -190,7 +194,7 @@ html {
 
 #DivCoinsText {
     background-color: white;
-    width: 400px;
+    width: 310px;
     margin: 0 auto;
     border-radius: 0px 0px 5px 5px;
     padding: 10px;
@@ -198,4 +202,19 @@ html {
 
 p {
     margin: 0px;
+}
+
+#display {
+    display: block;
+    position: relative;
+    height: auto;
+    width: auto;
+}
+
+#div_settings {
+    background-color: white;
+    border-radius: 5px;
+    width: 310px;
+    padding: 10px;
+    margin: 10px auto;
 }
