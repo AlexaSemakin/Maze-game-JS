@@ -19,14 +19,11 @@ let point_now = [0, 0],
     score = new Map(),
     widthLab = 320,
     minBlocks = 20,
-    sizeBlock = 10;
+    sizeBlock = 10,
+    coinsPoints = new Set();
 
 function setCharaterPoint(x, y) {
     document.getElementById("character").style = "left: " + (x * (sizeBlock + 6) + 5).toString() + "px; top: " + (y * (sizeBlock + 6) + 5).toString() + "px; " + "height: " + sizeBlock + "px; width: " + sizeBlock + "px;";
-    if (x == finish[1] && y == finish[0]) {
-        console.log(x, y);
-        next_lab();
-    }
     if (y * (sizeBlock + 6) + 5 > 160) {
         document.getElementById('laberint').scrollTop = y * (sizeBlock + 6) + 5 - 160;
     } else {
@@ -36,6 +33,11 @@ function setCharaterPoint(x, y) {
         document.getElementById('laberint').scrollLeft = x * (sizeBlock + 6) + 5 - 160;
     } else {
         document.getElementById('laberint').scrollLeft = 0;
+    }
+    if (x == finish[1] && y == finish[0]) {
+        console.log(x, y);
+        coins += Math.trunc(hfinish * hfinish / 10);
+        next_lab();
     }
 }
 
@@ -97,6 +99,7 @@ function checkSize(e) {
 
 function checkKey(e) {
     e = e || window.event;
+    console.log(e.keyCode);
     switch (e.keyCode) {
         case 37:
         case 39:
@@ -171,7 +174,7 @@ async function generete_interface() {
             style += "height: " + (sizeBlock).toString() + "px; ";
             style += "width: " + ((sizeBlock)).toString() + "px; ";
             if (i == finish[0] && j == finish[1]) {
-                style += "background-color: green; ";
+                block_image.classList.add("coin");
             } else {
                 style += "background-color: transporate; ";
             }
@@ -204,7 +207,9 @@ function getNum(a, b) {
 }
 
 function SetCoinsValue() {
-    document.getElementById("CoinsText").innerHTML = "<div style='display: inline-block; margin-right: 20px;'>Coins: " + coins.toString() + "</div>  <div style='display: inline-block; margin-left: 20px;'>" + "Score(" + (map.length).toString() + "): " + score.get(map.length).toString() + "</div>";
+    document.getElementById("CoinsText").innerHTML = "<div style='display: block; text-align: left; '>Coins: " + getCountMoney(coins) + " <div style = 'margin: 1px 0px; height: 15px; width: 15px;' id='_coin'></div></div> " +
+        "<div style='display: block; text-align: left; '> Size: " + (map.length).toString() + " </div>" +
+        "<div style='display: block; text-align: left; '>Score: " + score.get(map.length).toString() + "</div>";
 }
 
 function start(n) {
@@ -223,6 +228,29 @@ function start(n) {
         score.set(map.length, 0);
     }
     SetCoinsValue();
+}
+
+function generateCoins() {
+    for (let i = 0; i < Math.sqrt(map.length); i++) {
+        let item = [getRandomInt(map.length), getRandomInt(map.length)];
+        if (!coinsPoints.has(item)) {
+            coinsPoints.add(item);
+        }
+    }
+    for (let item of coinsPoints) {
+        let block_image = document.createElement("div");
+        block_image.className = "coin";
+        document.getElementById("display").append(block_image);
+        let style = "";
+        style += "position: absolute; ";
+        style += "display: inline-block; ";
+        style += "top: " + (item[0] * (sizeBlock + 6)).toString() + "px; ";
+        style += "left: " + (item[1] * (sizeBlock + 6)).toString() + "px; ";
+        style += "height: " + (5).toString() + "px; ";
+        style += "width: " + (5).toString() + "px; ";
+        style += "background-color: transporate; ";
+        block_image.style = style;
+    }
 }
 
 function generate_go_to_vector(count) {
@@ -320,6 +348,26 @@ function getMirorItem(index) {
     }
 }
 
-function loadForm() {
+function buy_scin(id) {
+    if (coins >= 200000) {
+        let classnow = document.getElementById('character').className;
+        let classscin = document.getElementById('scin' + id.toString()).className;
+        document.getElementById('scin' + id.toString()).classList = classnow;
+        document.getElementById('character').className = classscin;
+        document.getElementById('_character').className = classscin;
+        coins -= 200000;
+        SetCoinsValue();
+    }
+}
 
+function getCountMoney(count) {
+    if (count < 1000) {
+        return count.toString();
+    } else if (count < 1000000) {
+        return Math.round(count / 1000).toString() + "K";
+    } else if (count < 1000000000) {
+        return Math.round(count / 1000000).toString() + "M";
+    } else {
+        return Math.round(count / 1000000000).toString() + "B";
+    }
 }

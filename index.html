@@ -11,41 +11,44 @@
 </head>
 
 <body onload="generate()" class="disable-dbl-tap-zoom">
-    <div id="DivCoinsText">
-        <p id="CoinsText">
-        </p>
-        <br>
-        <div id="legend">
-            <div id="_characterDiv">
-                <div id="_character">
-
-                </div>
-                - персонаж
-            </div>
-            <div id="_finishDiv">
-                <div id="_finish">
-
-                </div>
-                - финиш
-            </div>
-            <div id="_coinDiv">
-                <div id="_coin">
-
-                </div>
-                - монета
-            </div>
-        </div>
-    </div>
-
-    <div id="div_settings">
+    <div id="settings_div">
         <input type="button" id='button_news' value="Новый лаберинт" onclick="generate()">
         <br>
         <input type="number" id='size_lab_textbox' value="20" min="5" max="300" step="5">
         <input type="button" id='button' value="Изменить размерность" onclick="generate(1)">
         <br>
-        <p class="not_select checkbox_button_visuble"><label class="not_select"><input type="checkbox" id="checkbox-visible-text" onclick="change_visible_text()" checked> 
-            <span class="not_select">видимость стрелок управления</span></label></p>
+        <p class="not_select checkbox_button_visuble">
+            <label class="not_select">
+            <input type="checkbox" id="checkbox-visible-text" onclick="change_visible_text()" checked> 
+            <span class="not_select">
+                видимость стрелок управления
+            </span>
+        </label>
+        </p>
     </div>
+
+    <div id="div_informations">
+        <div id="CoinsText">
+        </div>
+    </div>
+
+    <div id="div_informations">
+        <div id="legend">
+            <div class="text_style" id="_characterDiv">
+                <div class="style0" id="_character">
+                </div>
+                - персонаж
+            </div>
+            <div class="text_style" id="_coinDiv">
+                <div id="_coin">
+
+                </div>
+                - клад
+            </div>
+        </div>
+    </div>
+
+
     <div id="gamediv">
         <div id="contol_buttons" class="not_select">
             <div id="button_top" class="visible_text not_select" onclick="to_top()">
@@ -71,18 +74,53 @@
         </div>
         <div id="laberint">
 
-            <div id="character">
+            <div class="style0" id="character">
             </div>
             <div id="display">
             </div>
         </div>
     </div>
+    <div id="div_informations">
+        <div class="title_style" style="display: block; text-align: left; ">Магазин</div>
+        <div class="shop_element" onclick="buy_scin(1)">
+            <div class="text_style">200K
+                <div id="_coin">
 
+                </div>
+            </div>
+            <div id="scin1" class="style1"></div>
+        </div>
+        <div class="shop_element" onclick="buy_scin(2)">
+            <div class="text_style">200K
+                <div id="_coin">
 
+                </div>
+            </div>
+            <div id="scin2" class="style2"></div>
+        </div>
+        <div class="shop_element" onclick="buy_scin(3)">
+            <div class="text_style">200K
+                <div id="_coin">
 
+                </div>
+            </div>
+            <div id="scin3" class="style3"></div>
+        </div>
+        <div class="shop_element" onclick="buy_scin(4)">
+            <div class="text_style">200K
+                <div id="_coin">
 
-
+                </div>
+            </div>
+            <div id="scin4" class="style4"></div>
+        </div>
+        <div class="shop_element" onclick="buy_scin(5)">
+            <div class="text_style">200K
+                <div id="_coin"></div>
+            </div>
+            <div id="scin5" class="style5"></div>
+        </div>
+    </div>
 </body>
-
 
 </html>
