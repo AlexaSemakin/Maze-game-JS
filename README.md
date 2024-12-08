@@ -1,4 +1,4 @@
-# Maze Runner Game
+# MazeGame
 
 ## О проекте
 
